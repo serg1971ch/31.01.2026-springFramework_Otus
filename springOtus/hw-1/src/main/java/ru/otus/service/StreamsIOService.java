@@ -23,7 +23,6 @@ public class StreamsIOService implements IOService {
     }
 
     @Override
-
     public String readLine() {
         return scanner.nextLine();
     }

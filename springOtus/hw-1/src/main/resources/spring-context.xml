@@ -19,7 +19,6 @@
         <constructor-arg index="1" ref="systemInScanner"/>
     </bean>
 
-    <!-- имя файла с вопросами (только одно определение appProperties) -->
     <bean id="appProperties" class="ru.otus.config.AppProperties">
         <constructor-arg value="hw01.csv"/>
     </bean>
@@ -42,5 +41,4 @@
     <bean id="testRunnerService" class="ru.otus.service.TestRunnerServiceImpl">
         <constructor-arg ref="testService"/>
     </bean>
-
 </beans>

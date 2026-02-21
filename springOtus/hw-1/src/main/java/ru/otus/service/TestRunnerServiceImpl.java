@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TestRunnerServiceImpl implements TestRunnerService {
 
-    private final ru.otus.service.TestService testService;
+    private final TestService testService;
 
     @Override
     public void run() {

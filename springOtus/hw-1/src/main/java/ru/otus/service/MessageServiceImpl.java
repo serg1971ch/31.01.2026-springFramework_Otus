@@ -1,14 +1,10 @@
 package ru.otus.service;
-
 import lombok.Data;
 import ru.otus.domain.Message;
-
-import java.util.Scanner;
 import java.util.regex.Pattern;
 
 @Data
 public class MessageServiceImpl implements MessageService {
-
     private static final Pattern NAME_PATTERN =
             Pattern.compile("^[a-zA-Z][a-zA-Z\\s-]*$");
 
@@ -25,22 +21,21 @@ public class MessageServiceImpl implements MessageService {
         do {
             ioService.printLine("Write your first name:");
             firstName = ioService.readLine().trim();
-
-            if (isValidName(firstName)) {
+            if (!isValidName(firstName)) {
                 ioService.printLine("First name is invalid. Please use letters, spaces, or hyphens.");
             }
-        } while (isValidName(firstName));
+        } while (!isValidName(firstName));
+
         message.setFromFirstName(firstName);
 
         String lastName;
         do {
             ioService.printLine("Write your last name:");
             lastName = ioService.readLine().trim();
-
-            if (isValidName(lastName)) {
+            if (!isValidName(lastName)) {
                 ioService.printLine("Last name is invalid. Please use letters, spaces, or hyphens.");
             }
-        } while (isValidName(lastName));
+        } while (!isValidName(lastName));
 
         message.setFromLastName(lastName);
         return firstName + " " + lastName;
@@ -48,8 +43,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Message getMessage(int errCount) {
-        String fullName = getNameForMessage(); // Гарантированно получим имя
-
+        String fullName = getNameForMessage();
         String bodyMessage = String.format(
                 """
                 Dear %s,
@@ -58,15 +52,14 @@ public class MessageServiceImpl implements MessageService {
                 Test finished. Thank you!""",
                 fullName, 5 - errCount, errCount
         );
-
         message.setMessage(bodyMessage);
         return message;
     }
 
     public static boolean isValidName(String name) {
         if (name == null || name.isEmpty()) {
-            return true;
+            return false;
         }
-        return !NAME_PATTERN.matcher(name).matches();
+        return NAME_PATTERN.matcher(name).matches();
     }
 }

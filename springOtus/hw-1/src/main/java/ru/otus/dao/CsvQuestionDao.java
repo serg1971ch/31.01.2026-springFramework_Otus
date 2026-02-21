@@ -8,14 +8,11 @@ import ru.otus.dao.dto.QuestionDto;
 import ru.otus.domain.Question;
 import ru.otus.exceptions.QuestionReadException;
 
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CsvQuestionDao implements QuestionDao {
@@ -29,18 +26,17 @@ public class CsvQuestionDao implements QuestionDao {
                 throw new QuestionReadException("File not found: " + fileName);
             }
             try (Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
-                CsvToBean<QuestionDto> csv = new CsvToBeanBuilder<QuestionDto>(reader)
+                return new CsvToBeanBuilder<QuestionDto>(reader)
                         .withType(QuestionDto.class)
                         .withIgnoreLeadingWhiteSpace(true)
-                        .build();
-                List<QuestionDto> dtos = csv.parse();
-                return dtos.stream()
+                        .build()
+                        .parse()
+                        .stream()
                         .map(QuestionDto::toDomainObject)
-                        .collect(Collectors.toList());
+                        .toList();
             }
         } catch (Exception e) {
             throw new QuestionReadException("Failed to read questions from file " + fileName, e);
         }
     }
 }
-

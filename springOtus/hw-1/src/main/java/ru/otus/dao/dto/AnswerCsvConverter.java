@@ -4,7 +4,6 @@ import com.opencsv.bean.AbstractCsvConverter;
 import ru.otus.domain.Answer;
 
 public class AnswerCsvConverter extends AbstractCsvConverter {
-
     @Override
     public Object convertToRead(String value) {
         var valueArr = value.split("%");
