@@ -29,12 +29,12 @@ public class CsvQuestionDao implements QuestionDao {
                 throw new QuestionReadException("File not found: " + fileName);
             }
             try (Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
-                CsvToBean<QuestionDto> csv = new CsvToBeanBuilder<QuestionDto>(reader)
+                return new CsvToBeanBuilder<QuestionDto>(reader)
                         .withType(QuestionDto.class)
                         .withIgnoreLeadingWhiteSpace(true)
-                        .build();
-                List<QuestionDto> dtos = csv.parse();
-                return dtos.stream()
+                        .build()
+                        .parse()
+                        .stream()
                         .map(QuestionDto::toDomainObject)
                         .collect(Collectors.toList());
             }

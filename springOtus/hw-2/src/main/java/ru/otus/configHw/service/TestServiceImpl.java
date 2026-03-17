@@ -41,39 +41,33 @@ public class TestServiceImpl implements TestService {
             for (int i = 0; i < answers.size(); i++) {
                 ioService.printFormattedLine(" %d) %s", i + 1, answers.get(i).text());
             }
-            while (true) {
-                ioService.printLine("Your answer (numbers separated by comma, e.g., 1,2,3): ");
-                String line = ioService.readString();
-                if (line == null || line.trim().isEmpty()) {
-                    ioService.printLine("Answer cannot be empty. Please enter numbers (e.g., 1,2,3).");
+
+            ioService.printLine("Your answer (numbers separated by comma, e.g., 1,2,3): ");
+            String line = ioService.readString();
+            if (line == null || line.trim().isEmpty()) {
+                ioService.printLine("Answer cannot be empty. Please enter numbers (e.g., 1,2,3).");
+                continue;
+            }
+            try {
+                Set<Integer> chosenIndices = Arrays.stream(line.trim().split("\\s*,\\s*"))
+                        .filter(s -> !s.isBlank())
+                        .map(String::trim)
+                        .map(Integer::parseInt)
+                        .map(i -> i - 1)
+                        .collect(Collectors.toSet());
+                if (chosenIndices.isEmpty() || chosenIndices.size() > answers.size()) {
+                    ioService.printLine("Please enter from 1 to " + answers.size() + " numbers (e.g., 1,2,3).");
                     continue;
                 }
-                try {
-                    Set<Integer> chosenIndices = Arrays.stream(line.trim().split("\\s*,\\s*"))
-                            .filter(s -> !s.isBlank())
-                            .map(String::trim)
-                            .map(Integer::parseInt)
-                            .map(i -> i - 1) // переводим в 0-based
-                            .collect(Collectors.toSet());
-                    if (chosenIndices.isEmpty() || chosenIndices.size() > answers.size()) {
-                        ioService.printLine("Please enter from 1 to " + answers.size() + " numbers (e.g., 1,2,3).");
-                        continue;
-                    }
-                    int maxIdx = answers.size() - 1;
-                    if (chosenIndices.stream().anyMatch(idx -> idx < 0 || idx > maxIdx)) {
-                        ioService.printLine("Invalid answer number. Please enter numbers from 1 to " + answers.size());
-                        continue;
-                    }
-                    Set<Integer> expectedIndices = IntStream.range(0, answers.size())
-                            .filter(i -> answers.get(i).isCorrect()) // <-- замените .isCorrect() на реальный метод вашего Answer
-                            .boxed()
-                            .collect(Collectors.toSet());
-                    boolean isRight = chosenIndices.equals(expectedIndices);
-                    testResult.applyAnswer(question, isRight);
-                    break;
-                } catch (NumberFormatException ex) {
-                    ioService.printLine("Invalid number format. Please enter numbers separated by comma (e.g., 1,2,3).");
-                }
+                Set<Integer> expectedIndices = IntStream.range(0, answers.size())
+                        .filter(i -> answers.get(i).isCorrect())
+                        .boxed()
+                        .collect(Collectors.toSet());
+                boolean isRight = chosenIndices.equals(expectedIndices);
+                testResult.applyAnswer(question, isRight);
+                break;
+            } catch (NumberFormatException ex) {
+                ioService.printLine("Invalid number format. Please enter numbers separated by comma (e.g., 1,2,3).");
             }
         }
         return testResult;
