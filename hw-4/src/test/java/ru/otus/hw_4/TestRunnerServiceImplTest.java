@@ -51,16 +51,16 @@ class TestRunnerServiceImplTest {
     private static final String COMMAND_LOGIN_SHORT = "l";
     private static final String COMMAND_LOGIN_PATTERN = "%s %s";
 
-    @Mock
+    @MockBean
     private ResultService resultService;
 
-    @Mock
+    @MockBean
     private LocalizedIOService ioService;
 
-    @Mock
+    @MockBean
     private QuestionDao questionDao;
 
-    @InjectMocks
+    @Autowired
     private TestServiceImpl testService;
 
     private Student student;

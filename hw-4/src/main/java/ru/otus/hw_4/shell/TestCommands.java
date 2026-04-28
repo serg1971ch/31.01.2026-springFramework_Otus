@@ -24,14 +24,5 @@ public class TestCommands {
             return "Error during test execution: " + e.getMessage();
         }
     }
-
-    @ShellMethod(key = "help-test", value = "Show help for test commands")
-    public String helpTest() {
-        return """
-                Available commands:
-                start-test <firstName> <lastName> - Start the test for specified student
-                help-test - Show this help message
-                """;
-    }
 }
 
